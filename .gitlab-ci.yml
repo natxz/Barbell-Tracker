@@ -1,0 +1,87 @@
+image: "python:3.7"
+
+# before_script:
+#   - pip install -r requirements.txt
+
+
+stages:
+  - Static Analysis
+  - Deploy Develop Environment
+  - Test
+  - Deploy
+
+flake8:
+  stage: Static Analysis
+  script:
+  - df -h
+  - pip install flake8
+  - cd src
+  - flake8 --max-line-length=200 *.py
+  - cd application
+  - flake8 --max-line-length=200 *.py
+
+jinjalint:
+  stage: Static Analysis
+  script:
+    - pip install jinjalint
+    - cd src
+    - jinjalint templates/
+
+
+# --------------------------------------
+# Skipping this step for now as there are some issues, we will deploy manually
+# --------------------------------------
+test_deploy:
+    stage: Deploy Develop Environment
+    variables:
+      SCALINGO_APP_NAME: bbtrack-test
+      SCALINGO_REGION: osc-fr1
+    script:
+    - pip install -r requirements.txt
+    - apt-get update -yq
+    - apt-get install -y ruby ruby-dev rubygems-integration
+    - gem install dpl
+    - dpl --provider=heroku --app=bbtestdeploy --api-key=$HEROKU_DEPLOY_API_KEY
+    only:
+    - develop
+
+pytest:
+  stage: Test
+  script:
+  - pip install -r requirements.txt
+  - apt-get update
+  - apt-get install -y libgl1-mesa-dev
+  - cd src
+  - python setup.py develop
+  - python -m pytest --verbose
+
+cross_browser_test_env_tests:
+    stage: Test
+    script:
+    - pip install -r requirements.txt
+    - cd src/test/crossbrowsertesting
+    - python browserstack.py $BROWSERSTACK_USER $BROWSERSTACK_API_KEY $BROWSERSTACK_DEV_ENV
+    only:
+    - develop
+
+BDD_tests_test:
+    stage: Test
+    services:
+      - selenium/standalone-chrome
+    script:
+      - pip install -r requirements.txt
+      - cd src/test/BDD
+      - behave
+    only:
+      - develop
+
+production_deploy:
+  stage: Deploy
+  script:
+  - pip install -r requirements.txt
+  - apt-get update -yq
+  - apt-get install -y ruby ruby-dev rubygems-integration
+  - gem install dpl
+  - dpl --provider=heroku --app=bbtrack --api-key=$HEROKU_DEPLOY_API_KEY
+  only:
+  - master

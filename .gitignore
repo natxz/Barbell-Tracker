@@ -1,0 +1,69 @@
+# Add files names (and patterns) you want git to ignore here.
+
+# Ignore java .class files.
+*.class
+
+# Ignore compiled C/C++ files.
+*.o
+
+# Ignore everything in the build directory.
+build/
+
+# Do not store node modules in your repo.
+node_modules/
+.DS_Store/
+__pycache__/
+bin/
+lib/
+src.egg-info/
+venv/
+.env
+*.pyc
+instance/
+.DS_Store
+app.py
+Activate.ps1
+activate
+*.bat
+*exe
+*pyc
+Scripts/
+node_modules/
+.pytest_cache
+.cfg
+yarn.lock
+.vscode
+tox.ini
+.flaskenv
+.pytest_cache/
+policy.json
+package.json
+package-lock.json
+.envrc
+# logs/
+# dont include openpose in the repository
+openpose-build/
+src/application/openpose/
+src/application/extra
+deadlift_analysis.py
+*/application/body_functions/*.jpg
+*/application/*.png
+*/application/*.avi
+*/application/body_functions/*.jpeg
+*/application/body_functions/*.mp4
+*/application/body_functions/*.avi
+src/static/video/*.avi
+try.py
+src/dl.avi
+src/white.avi
+extra/
+*.mov
+src/test/body_tracking/test_images/deadlift-bar
+src/test/body_tracking/test_images/squat-bar
+src/test/body_tracking/test_images/deadlift
+src/test/body_tracking/test_images/squat
+*.avi
+src/static/video/video2.avi
+src/white.avi
+src/test/body_tracking/test_images/deadlift-bar
+src/test/body_tracking/test_images/squat-bar
